@@ -9,6 +9,7 @@ import { format } from 'date-fns';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import { confirmDialog, showToast } from "@/Pages/utils/SweetAlert.service";
 import { useForm } from '@inertiajs/vue3';
+
 const props = defineProps({
     area: Object,
     departamento_id: Number,
@@ -76,6 +77,11 @@ watch(
         getMinutas(1, rows.value, filters.value, sortField.value, sortOrder.value);
     });
 
+watch(() => props.area, (newVal, oldVal) => {
+    area.value = newVal;
+    getMinutas();
+});
+
 async function getMinutas(page = 1, rowsPerPage = rows.value, filter = "", sortField = "id", sortOrder = -1) {
     try {
         const response = await axios.get(route('minutas.byArea', area.value.id), {
@@ -107,7 +113,7 @@ const getAreas = async () => {
 
 const getDepartamentos = async () => {
     try {
-        const response = await axios.get(route("departamentos.byArea", area.value));
+        const response = await axios.get(route("departamentos.byArea", area.value.id));
         departamentos.value = response.data.departamentos;
 
     } catch (error) {
@@ -210,7 +216,6 @@ const getTiposMinuta = async () => {
 </script>
 
 <template>
-
     <div class="mt-4 overflow-x-auto">
         <div class="flex gap-4">
             <InputText v-model="globalFilter" placeholder="Buscar..." class="mb-3 px-2 py-2" />

@@ -11,6 +11,7 @@ import Tab from 'primevue/tab';
 import TabPanels from 'primevue/tabpanels';
 import TabPanel from 'primevue/tabpanel';
 import ContenidoPanel from "./Partials/TabPanel/ContenidoPanel.vue";
+import PilaresSelect from "@/Components/PilaresSelect.vue";
 
 
 const openFilter = () => {
@@ -23,24 +24,36 @@ const props = defineProps({
 });
 const title = "minutero";
 const areas = ref([]);
+const selectedPilar = ref(1);
+const selectedArea = ref({});
 const area_id = props.area_id ? ref(props.area_id - 1) : ref(0);
 const departamento_id = ref(props.departamento_id);
-let customFilter = ref(Boolean);
 
 onMounted(() => {
-
     getAreas();
-
 });
+
+const getArea = () => {
+    const selectedArea = areas.value.find(area => area.id == selectedPilar.value);
+    return { ...selectedArea };
+}
 
 const getAreas = async () => {
     try {
         const response = await axios.get("/api/areas");
         areas.value = response.data;
+        area_id.value = 1
+        selectedArea.value = getArea();
     } catch (error) {
         console.error(error);
     }
 };
+
+const onSelectedPilar = (pilarID) => {
+    selectedPilar.value = pilarID;
+    selectedArea.value = getArea();
+};
+
 </script>
 
 <style scoped>
@@ -73,6 +86,7 @@ const getAreas = async () => {
     <Layout :titulo="title">
 
         <Head title="Minutas" />
+        <PilaresSelect :currentPilarID="selectedPilar" :onSelectedPilar="onSelectedPilar"></PilaresSelect>
 
         <div class="py-2">
             <div class="bg-white overflow-hidden">
@@ -82,14 +96,6 @@ const getAreas = async () => {
                         <div class="card">
                             <!-- Filtre input -->
                             <div class="block md:flex justify-between items-end content-center">
-                                <div class="flex gap-4">
-                                    <InputText v-model="globalFilter" placeholder="Buscar..." class="mb-3 h-11" />
-                                    <PrimaryButton
-                                        class="border-[#E4E4E7] border-1 bg-black border-solid h-11 text-[#9AA0A7] hover:text-white pi pi-filter"
-                                        @click="openFilter">
-                                    </PrimaryButton>
-                                </div>
-
                                 <Link  :href="route('minutas.create')">
                                     <PrimaryButton class="bg-black m-4 p-[100px]" label="Nueva Minuta">
                                         <i class="mr-2 pi pi-plus"></i>
@@ -97,13 +103,7 @@ const getAreas = async () => {
                                 </Link>
                             </div>
                             <!-- content table -->
-                            <Tabs :value="area_id ? area_id : 0">
-                                <TabPanels>
-                                    <TabPanel v-for="( area, key ) in areas" :key=key :value=key class="overflow-auto">
-                                        <ContenidoPanel :area=area :departamento_id=departamento_id />
-                                    </TabPanel>
-                                </TabPanels>
-                            </Tabs>
+                            <ContenidoPanel :area="selectedArea" :departamento_id="departamento_id" />
                         </div>
                     </div>
                 </div>
