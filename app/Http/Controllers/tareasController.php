@@ -130,19 +130,19 @@ class tareasController extends Controller
         }
 
         $user = auth()->user();
-        // if ($user->hasRole('lider_pilar')) {
-        //     $result = $query->with('area', 'departamento', 'minuta', 'responsable', 'estatus', 'revisor')->paginate($pageSize, ['*'], 'page', $page);
-        // } elseif ($user_rol == 'admin') {
-        //     $query->join('minutas', 'tareas.minuta_id', '=', 'minutas.id')
-        //         ->select('tareas.*', 'minutas.alias as minuta_alias') // Select distinct columns
-        //         ->where('minutas.privada', 0);
-        //     $result = $query->with('area', 'departamento', 'minuta', 'responsable', 'estatus', 'revisor')->paginate($pageSize, ['*'], 'page', $page);
-        // } else {
+        if ($user->hasRole('lider_pilar')) {
+            $result = $query->with('area', 'departamento', 'minuta', 'responsable', 'estatus', 'revisor')->paginate($pageSize, ['*'], 'page', $page);
+        } elseif ($user_rol == 'admin') {
+            $query->join('minutas', 'tareas.minuta_id', '=', 'minutas.id')
+                ->select('tareas.*', 'minutas.alias as minuta_alias') // Select distinct columns
+                ->where('minutas.privada', 0);
+            $result = $query->with('area', 'departamento', 'minuta', 'responsable', 'estatus', 'revisor')->paginate($pageSize, ['*'], 'page', $page);
+        } else {
 
             $result = $query->with('area', 'departamento', 'minuta', 'responsable', 'estatus', 'revisor')->paginate($pageSize, ['*'], 'page', $page);
-        // }
+        }
 
-        // $result = $query->with('area', 'departamento', 'minuta', 'responsable', 'estatus', 'revisor')->paginate($pageSize, ['*'], 'page', $page);
+        $result = $query->with('area', 'departamento', 'minuta', 'responsable', 'estatus', 'revisor')->paginate($pageSize, ['*'], 'page', $page);
 
         return response()->json($result);
     }
