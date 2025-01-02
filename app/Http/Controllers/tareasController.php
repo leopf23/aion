@@ -29,8 +29,8 @@ class tareasController extends Controller
 
     public function findAll(Request $request)
     {
-        // $user_rol = $request->user()->roles()->first()->name;
-        // $user_id = $request->user()->id;
+        $user_rol = $request->user()->roles()->first()->name;
+        $user_id = $request->user()->id;
 
 
         $query = tareas::query();
@@ -142,7 +142,7 @@ class tareasController extends Controller
             $result = $query->with('area', 'departamento', 'minuta', 'responsable', 'estatus', 'revisor')->paginate($pageSize, ['*'], 'page', $page);
         }
 
-        $result = $query->with('area', 'departamento', 'minuta', 'responsable', 'estatus', 'revisor')->paginate($pageSize, ['*'], 'page', $page);
+        // $result = $query->with('area', 'departamento', 'minuta', 'responsable', 'estatus', 'revisor')->paginate($pageSize, ['*'], 'page', $page);
 
         return response()->json($result);
     }
@@ -197,7 +197,7 @@ class tareasController extends Controller
             'readed' => 0,
         ];
 
-        // $notification = Notificacion::create($notification);
+        $notification = Notificacion::create($notification);
 
         $responsable = User::find($request->responsable_id);
     }

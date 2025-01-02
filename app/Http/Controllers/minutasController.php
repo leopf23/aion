@@ -301,7 +301,7 @@ class minutasController extends Controller
 
         $user = auth()->user();
         if ($user->hasRole('lider_pilar')) {
-            dd('Admin'); // Devuelve una colección de nombres de roles
+            // dd('Admin'); // Devuelve una colección de nombres de roles
         } else {
             $query->where('privada', 0);
         }
