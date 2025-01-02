@@ -214,9 +214,14 @@ onMounted(() => {
                                 </div>
 
                                 <div class="flex justify-end border-gray-200 bg-white my-4 px-4 pt-2">
-                                    <PrimaryButton class="ms-4 pi pi-save" :class="{ 'opacity-25': form.processing, }"
-                                        :disabled="form.processing">
-                                    </PrimaryButton>
+
+                                
+                                            <PrimaryButton
+                                                class="bg-black hover:bg-gray-800 px-10" :class="{ 'opacity-25': form.processing, }"
+                                                :disabled="form.processing">
+                                               Guardar
+                                            </PrimaryButton>
+                        
                                 </div>
                             </form>
                         </div>
